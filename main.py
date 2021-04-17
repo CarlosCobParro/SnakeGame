@@ -1,6 +1,6 @@
 import pygame, random, sys
 from pygame.locals import *
-from nn import neural_net
+
 import numpy as np
 import math as m
 from canvas import *

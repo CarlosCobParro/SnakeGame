@@ -1,6 +1,6 @@
 import pygame, random, sys
 from pygame.locals import *
-from nn import neural_net
+
 import numpy as np
 import math as m
 from apple_class import *
@@ -23,7 +23,8 @@ class canvas():
 
         self.screen = pygame.display.set_mode((self.height, self.width))
         self.font = pygame.font.SysFont('Arial', 20)
-        self.score_pos=[100,10]
+        self.frame_pos = [70, 10]
+        self.score_pos = [150, 10]
 
         self.score = 0
         self.frames = 0
@@ -107,28 +108,28 @@ class canvas():
         if self.flag == 200:
             self.flag = 0
             self.frames = self.frames + 1
-            if self.frames < 1000:
-                if np.random.rand() <= self.DNN_model.epsilon:
-                    self.snake.randomize_movement = [0, 1]
-                else:
-                    self.snake.randomize_movement = [1, 0]
-                self.DNN_model.epsilon -= 0.005
-            self.train_DNN()
+
+            self.snake.randomize_movement = [0, 0]
+
+
             self.snake.move_snake(self.screen, self.DNN_model, self.apple)
 
 
         self.flag = self.flag + 1
         self.apple.draw_apple(self.screen)
-        self.screen.blit(self.font.render(str(self.frames), True, (250, 250, 250)), self.score_pos)
+        self.screen.blit(self.font.render(str(self.frames), True, (250, 250, 250)), self.frame_pos)
+        self.screen.blit(self.font.render(str(self.score), True, (250, 250, 250)), self.score_pos)
         self.reset = self.snake.collide_self_wall(self.height, self.width)
         self.eat = self.snake.eat_apple(self.apple)
 
         if self.eat == True:
+            self.score += 10
             self.screen.blit(self.apple.apple_image, (self.apple.pos_apple(self.height, self.width, self.size_step)[0],
                                                       self.apple.pos_apple(self.height, self.width, self.size_step)[1]))
 
         if self.reset == True:
             self.snake.reset(self.screen, self.height)
+            self.score = 0
 
         self.snake.draw_snake(self.screen)
         pygame.display.update()

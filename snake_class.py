@@ -1,6 +1,6 @@
 import pygame, random, sys
 from pygame.locals import *
-from nn import neural_net
+
 import numpy as np
 import math as m
 import random
@@ -23,6 +23,7 @@ class snake():
         self.colour_snake = (0, 0, 0)
         self.snake_image.fill(self.colour_snake)
 
+
     def move_snake(self, screen, DNN_model, apple):
         if self.randomize_movement == [0, 0]:
             for event in pygame.event.get():
@@ -40,11 +41,6 @@ class snake():
                         self.action = self.down.copy()
                 else:
                     pass
-        elif self.randomize_movement == [0, 1]:
-            self.action = random.choice([self.up, self.down, self.right, self.left])
-
-        elif self.randomize_movement == [1, 0]:
-            self.action = DNN_model.predicting([self.pos_snake_X[0], self.pos_snake_Y[0], apple.pos_apple_X, apple.pos_apple_Y])
 
 
         if self.dir == self.up and (self.action == self.left or self.right):
@@ -117,6 +113,7 @@ class snake():
         if self.collide(self.pos_snake_X[0], apple.pos_apple_X, self.pos_snake_Y[0], apple.pos_apple_Y, 20, 20, 20, 20):
             self.pos_snake_X.append(700)
             self.pos_snake_Y.append(700)
+
             return True
         else:
             return False
