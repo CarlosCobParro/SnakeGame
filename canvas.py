@@ -5,8 +5,10 @@ import numpy as np
 import math as m
 from apple_class import *
 from scipy.spatial import distance
+from Q-learning import *
 from snake_class import *
 from DNN_class import *
+
 
 class canvas():
     def __init__(self):
@@ -34,10 +36,25 @@ class canvas():
 
         self.apple = apple(self.size_range, self.size_range, self.size_step)
         self.snake = snake(self.height, self.width, self.size_step)
-        self.DNN_model = DNN_neural()
+        #self.DNN_model = DNN_neural()
+
         self.X_train = []
         self.Y_train = []
         self.flag = 0
+
+
+        #parametros
+        self.params = dict()
+        self.params['name'] = None
+        self.params['epsilon'] = 1
+        self.params['gamma'] = .95
+        self.params['batch_size'] = 500
+        self.params['epsilon_min'] = .01
+        self.params['epsilon_decay'] = .995
+        self.params['learning_rate'] = 0.00025
+        self.params['layer_sizes'] = [128, 128, 128]
+        self.DQN= DQN( self.params, self.snake)
+
 
     def getState(self):
         return ([self.snake.pos_snake_X[0], self.snake.pos_snake_Y[0],
@@ -94,18 +111,47 @@ class canvas():
 
         print(self.DNN_model.loss)
 
+    def train_dqn(self, episode=50, env):
+
+        sum_of_rewards = []
+        agent = DQN(env, self.params)
+
+        for e in range(episode):
+            state = env.reset()
+            state = np.reshape(state, (1, env.state_space))
+            score = 0
+            max_steps = 10000
+            for i in range(max_steps):
+                action = agent.act(state)
+
+                prev_state = state
+                next_state, reward, done, _ = env.step(action)
+                score += reward
+                next_state = np.reshape(next_state, (1, env.state_space))
+                agent.remember(state, action, reward, next_state, done)
+                state = next_state
+                if params['batch_size'] > 1:
+                    agent.replay()
+                if done:
+                    print(f'final state before dying: {str(prev_state)}')
+                    print(f'episode: {e + 1}/{episode}, score: {score}')
+                    break
+            sum_of_rewards.append(score)
+        return sum_of_rewards
+
+
+
+
+
     def background(self):
 
         #Init pygame in this methods
 
         self.screen.fill(self.light_green)
-        for x in range(self.size_range, (self.height-self.size_step), 2*self.size_step):
-            for y in range(self.size_range, (self.height-self.size_step), 2*self.size_step):
-                pygame.draw.rect(self.screen, self.green, [x, y, self.size_step, self.size_step])
 
         pygame.display.set_caption('La serpiente taka taka')
 
-        if self.flag == 200:
+        if self.flag == 800:
             self.flag = 0
             self.frames = self.frames + 1
 

@@ -43,6 +43,6 @@ class DNN_neural():
         prediction = self.neuralNet.predict(np.array([state])).flatten().tolist()
         action = prediction.index(max(prediction))
         action_mov = [0, 0, 0, 0]
-        action_mov[action]=1
+        action_mov[action] = 1
         return action_mov
 

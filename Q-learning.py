@@ -1,6 +1,4 @@
 
-
-
 import random
 import numpy as np
 
@@ -35,7 +33,7 @@ class DQN:
     def build_model(self):
         model = Sequential()
         Adam = keras.optimizers.Adam(
-            learning_rate=0.00251,
+            learning_rate=self.learning_rate,
             beta_1=0.9,
             beta_2=0.999,
             epsilon=1e-01,
