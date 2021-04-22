@@ -1,9 +1,3 @@
-import pygame, random, sys
-from pygame.locals import *
-import random as rd
-import numpy as np
-import math as m
-
 
 from apple_class import *
 

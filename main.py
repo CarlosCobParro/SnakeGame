@@ -1,8 +1,4 @@
-import pygame, random, sys
-from pygame.locals import *
 
-import numpy as np
-import math as m
 from canvas import *
 from snake_class import *
 

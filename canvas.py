@@ -1,10 +1,4 @@
-import pygame, random, sys
-from pygame.locals import *
 
-import numpy as np
-import math as m
-from apple_class import *
-from scipy.spatial import distance
 from QLearning import *
 from snake_class import *
 from DNN_class import *
@@ -16,18 +10,15 @@ class canvas():
         self.light_green = (30, 100, 30)
         self.green = (30,80,30)
         self.clock = pygame.time.Clock()
-
         #size of the backgrounf
         self.height = 300
         self.width = 300
         self.size_step = 20
         self.size_range = 20
-
         self.screen = pygame.display.set_mode((self.height, self.width))
         self.font = pygame.font.SysFont('Arial', 20)
         self.frame_pos = [70, 10]
         self.score_pos = [150, 10]
-
         self.score = 0
         self.frames = 0
         self.loss = 0
@@ -37,14 +28,12 @@ class canvas():
 
         self.apple = apple(self.size_range, self.size_range, self.size_step)
         self.snake = snake(self.height, self.width, self.size_step)
-        #self.DNN_model = DNN_neural()
+        self.agent_DQN = DQN(self.params, self.snake)
 
         self.X_train = []
         self.Y_train = []
         self.flag = 0
-
-
-        #parametros
+  #parametros
         self.params = dict()
         self.params['name'] = None
         self.params['epsilon'] = 1
@@ -54,7 +43,7 @@ class canvas():
         self.params['epsilon_decay'] = .995
         self.params['learning_rate'] = 0.00025
         self.params['layer_sizes'] = [128, 128, 128]
-        self.agent_DQN= DQN( self.params, self.snake)
+
         self.state = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 
