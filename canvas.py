@@ -5,7 +5,7 @@ import numpy as np
 import math as m
 from apple_class import *
 from scipy.spatial import distance
-from Q-learning import *
+from QLearning import *
 from snake_class import *
 from DNN_class import *
 
@@ -21,7 +21,7 @@ class canvas():
         self.height = 300
         self.width = 300
         self.size_step = 20
-        self.size_range = 15
+        self.size_range = 20
 
         self.screen = pygame.display.set_mode((self.height, self.width))
         self.font = pygame.font.SysFont('Arial', 20)
@@ -31,6 +31,7 @@ class canvas():
         self.score = 0
         self.frames = 0
         self.loss = 0
+        self.reward = 0
         self.reset = False
         self.eat = False
 
@@ -53,7 +54,8 @@ class canvas():
         self.params['epsilon_decay'] = .995
         self.params['learning_rate'] = 0.00025
         self.params['layer_sizes'] = [128, 128, 128]
-        self.DQN= DQN( self.params, self.snake)
+        self.agent_DQN= DQN( self.params, self.snake)
+        self.state = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 
     def getState(self):
@@ -111,71 +113,84 @@ class canvas():
 
         print(self.DNN_model.loss)
 
-    def train_dqn(self, episode=50, env):
+    def train_dqn(self, episode=100):
 
         sum_of_rewards = []
-        agent = DQN(env, self.params)
 
         for e in range(episode):
-            state = env.reset()
-            state = np.reshape(state, (1, env.state_space))
-            score = 0
+            self.score, self.frames, self.loss, self.reward, self.Death, self.state = self.snake.reset(self.screen, self.height, self.apple)
             max_steps = 10000
             for i in range(max_steps):
-                action = agent.act(state)
 
-                prev_state = state
-                next_state, reward, done, _ = env.step(action)
-                score += reward
-                next_state = np.reshape(next_state, (1, env.state_space))
-                agent.remember(state, action, reward, next_state, done)
-                state = next_state
-                if params['batch_size'] > 1:
-                    agent.replay()
-                if done:
+                self.snake.action = self.agent_DQN.act(self.state)
+                prev_state = self.state
+
+                next_state = self.system()
+
+                self.score += self.reward
+                #next_state = np.reshape(next_state, (1, self.snake.state_space))
+
+                self.agent_DQN.remember(self.state, self.snake.action, self.reward, next_state, self.Death)
+
+                self.state = next_state
+
+                if self.params['batch_size'] > 1:
+                    self.agent_DQN.replay()
+
+                if self.Death:
                     print(f'final state before dying: {str(prev_state)}')
-                    print(f'episode: {e + 1}/{episode}, score: {score}')
+                    print(f'episode: {e + 1}/{episode}, score: {self.score}')
                     break
-            sum_of_rewards.append(score)
+
+            sum_of_rewards.append(self.score)
+
         return sum_of_rewards
 
 
-
-
-
-    def background(self):
+    def system(self):
 
         #Init pygame in this methods
-
+        reward_given = False
         self.screen.fill(self.light_green)
-
         pygame.display.set_caption('La serpiente taka taka')
-
-        if self.flag == 800:
-            self.flag = 0
-            self.frames = self.frames + 1
-
-            self.snake.randomize_movement = [0, 0]
-
-
-            self.snake.move_snake(self.screen, self.DNN_model, self.apple)
-
-
-        self.flag = self.flag + 1
-        self.apple.draw_apple(self.screen)
+        self.screen.fill(self.light_green)
+        for x in range(self.size_range, (self.height - self.size_step), 2 * self.size_step):
+            for y in range(self.size_range, (self.height - self.size_step), 2 * self.size_step):
+                pygame.draw.rect(self.screen, self.green, [x, y, self.size_step, self.size_step])
         self.screen.blit(self.font.render(str(self.frames), True, (250, 250, 250)), self.frame_pos)
         self.screen.blit(self.font.render(str(self.score), True, (250, 250, 250)), self.score_pos)
-        self.reset = self.snake.collide_self_wall(self.height, self.width)
-        self.eat = self.snake.eat_apple(self.apple)
 
+        dist_old = self.distance(0, 0)
+        self.snake.move_snake(self.screen, self.agent_DQN, self.apple)
+        self.apple.draw_apple(self.screen)
+        dist_new = self.distance(0, 0)
+
+        self.eat = self.snake.eat_apple(self.apple)
         if self.eat == True:
-            self.score += 10
+            reward_given = True
+            self.reward = 70
             self.screen.blit(self.apple.apple_image, (self.apple.pos_apple(self.height, self.width, self.size_step)[0],
                                                       self.apple.pos_apple(self.height, self.width, self.size_step)[1]))
 
+        self.reset = self.snake.collide_self_wall(self.height, self.width)
         if self.reset == True:
-            self.snake.reset(self.screen, self.height)
-            self.score = 0
+            self.snake.reset_position(self.screen, self.height,self.apple)
+            self.reward = -100
+            reward_given = True
+            self.Death = True
+
+        self.flag = self.flag + 1
+
+        if reward_given == False:
+            if dist_old < dist_new:
+                self.reward = -2
+            else:
+                self.reward = 1
 
         self.snake.draw_snake(self.screen)
         pygame.display.update()
+        next_state = self.snake.get_state(self.apple, self.height, self.height)
+
+
+
+        return next_state

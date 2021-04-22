@@ -7,8 +7,8 @@ import math as m
 class apple():
 
     def __init__(self, pos_X, pos_Y, size):
-        self.pos_apple_X = pos_X
-        self.pos_apple_Y = pos_Y
+        self.pos_apple_X = 40
+        self.pos_apple_Y = 40
 
         self.apple_image = pygame.Surface((size, size))
         self.apple_image.fill((255,0,0)) #It is red, but the order numbers is RGB

@@ -9,7 +9,7 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers.core import Dense, Activation, Dropout, Flatten
 from keras.optimizers import SGD
-
+from keras.optimizers import Adam
 
 class DQN:
 
@@ -17,8 +17,8 @@ class DQN:
 
     def __init__(self, env, params):
 
-        self.action_space = env.action_space
-        self.state_space = env.state_space
+
+
         self.epsilon = 1
         self.gamma = .95
         self.batch_size = 500
@@ -31,8 +31,8 @@ class DQN:
 
 
     def build_model(self):
-        model = Sequential()
-        Adam = keras.optimizers.Adam(
+        neuralNet = Sequential()
+        adam = keras.optimizers.Adam(
             learning_rate=self.learning_rate,
             beta_1=0.9,
             beta_2=0.999,
@@ -40,36 +40,39 @@ class DQN:
             amsgrad=False,
             name="Adam"
         )
-        #input layer and first layer with 128 neurons
-        self.neuralNet.add(Dense(128, input_shape=12, activation='relu'))
+        #input layer and first layer with 100 neurons
+        neuralNet.add(Dense(30, input_shape= (12,) , activation='relu'))
 
         #layer2
-        self.neuralNet.add(Dense(128))
-        self.neuralNet.add(Activation('relu'))
+        neuralNet.add(Dense(30))
+        neuralNet.add(Activation('relu'))
 
-        #layer3
-        self.neuralNet.add(Dense(128))
-        self.neuralNet.add(Activation('relu'))
+        # layer2
+        neuralNet.add(Dense(30))
+        neuralNet.add(Activation('relu'))
+
 
         # output layer (up, down, right and left) 4 neurons
-        self.neuralNet.add(Dense(4))
-        self.neuralNet.add(Activation('softmax'))
+        neuralNet.add(Dense(4))
+        neuralNet.add(Activation('softmax'))
 
 
-        self.neuralNet.compile(loss="mean_squared_error", optimizer=Adam, metrics=["mean_squared_error"])
-        return model
+        neuralNet.compile(loss='mse', optimizer=adam)
+        return neuralNet
 
 
-    def remember(self, state, action, reward, next_state, done):
-        self.memory.append((state, action, reward, next_state, done))
+    def remember(self, state, action, reward, next_state, Death):
+        self.memory.append((state, action, reward, next_state, Death))
 
 
     def act(self, state):
-
+        action = [0, 0, 0, 0]
         if np.random.rand() <= self.epsilon:
-            return random.randrange(self.action_space)
-        act_values = self.model.predict(state)
-        return np.argmax(act_values[0])
+            action[random.sample(([0,1,2,3]),1)[0]] = 1
+        else:
+            act_values = self.neuralNet.predict(np.array([state]))
+            action[np.argmax(act_values[0])] = 1
+        return action
 
 
     def replay(self):
@@ -87,12 +90,17 @@ class DQN:
         states = np.squeeze(states)
         next_states = np.squeeze(next_states)
 
-        targets = rewards + self.gamma*(np.amax(self.model.predict_on_batch(next_states), axis=1))*(1-dones)
-        targets_full = self.model.predict_on_batch(states)
+        targets = rewards + self.gamma*(np.amax(self.neuralNet.predict_on_batch(next_states), axis=1))*(1-dones)
+        targets_full = self.neuralNet.predict_on_batch(states)
 
         ind = np.array([i for i in range(self.batch_size)])
-        targets_full[[ind], [actions]] = targets
 
-        self.model.fit(states, targets_full, epochs=1, verbose=0)
+        pos = []
+
+        for i in actions.tolist(): pos.append(i.index(max(i)))
+        targets_full[[ind], [pos]] = targets
+
+        self.neuralNet.fit(states, targets_full, epochs=1, verbose=0)
+
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
