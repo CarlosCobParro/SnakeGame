@@ -2,7 +2,7 @@
 from QLearning import *
 from snake_class import *
 from DNN_class import *
-
+import math as m
 
 class canvas():
     def __init__(self):
@@ -26,14 +26,7 @@ class canvas():
         self.reset = False
         self.eat = False
 
-        self.apple = apple(self.size_range, self.size_range, self.size_step)
-        self.snake = snake(self.height, self.width, self.size_step)
-        self.agent_DQN = DQN(self.params, self.snake)
-
-        self.X_train = []
-        self.Y_train = []
-        self.flag = 0
-  #parametros
+        # parametros
         self.params = dict()
         self.params['name'] = None
         self.params['epsilon'] = 1
@@ -45,6 +38,14 @@ class canvas():
         self.params['layer_sizes'] = [128, 128, 128]
 
         self.state = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.apple = apple(self.size_range, self.size_range, self.size_step)
+        self.snake = snake(self.height, self.width, self.size_step)
+        self.agent_DQN = DQN(self.params, self.snake)
+
+        self.X_train = []
+        self.Y_train = []
+        self.flag = 0
+
 
 
     def getState(self):

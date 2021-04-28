@@ -178,8 +178,10 @@ class snake():
 
     def reset(self, screen, height, apple):
 
-        self.pos_snake_X = [int(height / 2)+10,int(height / 2)+10]
-        self.pos_snake_Y = [int(height / 2)+10,int(height / 2)+30]
+        self.pos_snake_X = [int(height / 2) + 10, int(height / 2) + 10, int(height / 2) + 10, int(height / 2) + 10,
+                            int(height / 2) + 10]
+        self.pos_snake_Y = [int(height / 2) + 10, int(height / 2) + 30, int(height / 2) + 30, int(height / 2) + 30,
+                            int(height / 2) + 30]
 
         self.dir = [1, 0, 0, 0]
         score = 0
@@ -196,8 +198,8 @@ class snake():
         return score, frames, loss, reward, Death, state
 
     def reset_position(self, screen, height, apple):
-        self.pos_snake_X = [int(height / 2) + 10, int(height / 2) + 10]
-        self.pos_snake_Y = [int(height / 2) + 10, int(height / 2) + 30]
+        self.pos_snake_X = [int(height / 2) + 10, int(height / 2) + 10, int(height / 2) + 10, int(height / 2) + 10, int(height / 2) + 10]
+        self.pos_snake_Y = [int(height / 2) + 10, int(height / 2) + 30, int(height / 2) + 30, int(height / 2) + 30, int(height / 2) + 30]
         self.dir = [1, 0, 0, 0]
         for i in range(0, len(self.pos_snake_X)):
             screen.blit(self.snake_image, (self.pos_snake_X[i], self.pos_snake_Y[i]))

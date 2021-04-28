@@ -25,7 +25,25 @@ but it was more comfortable for me to use classes.
 ## Class Canvas:
 
 This class is the game board. Its aim is to draw each element of the game, control the score, to 
-link the other objects (Snake, apple and DNN).  
+link the other objects (Snake, apple and DNN). 
+
+
+## Apple class:
+
+To avoid problems is more useful divided every part of the code in classes, that is the sense of this
+class. The apple class allows to create objects emulating a apple in the game. Its aim is simple, to appear
+in the canvas in a random position and draw the apple, no more. This class has only two method that describe
+the below behaviour "def pos_apple" and def "draw_apple". This object has the position X and Y as main variables
+
+
+## Snake class:
+
+The snake class is more complex than apple class because the snake in the game has number of actions than apple.
+The main methods are:
+* The snake Movement: is based in two parameters, the first one is the direction of the head, there are 4 directions:
+up, down right and left. If the head snake has direction up its movement only can be up, right or left. In this
+  case the snake can not move to down. 
+  ![picture](images/move.png)
 
 
 
