@@ -41,10 +41,37 @@ the below behaviour "def pos_apple" and def "draw_apple". This object has the po
 The snake class is more complex than apple class because the snake in the game has number of actions than apple.
 The main methods are:
 * The snake Movement: is based in two parameters, the first one is the direction of the head, there are 4 directions:
-up, down right and left. If the head snake has direction up its movement only can be up, right or left. In this
-  case the snake can not move to down. 
-  ![picture](images/move.png)
+up, down right and left. If the head snake has direction up its movement only can be up, right or left. In this case the
+  snake can not move to down.
+  
+![alt text](images/move.png)
 
+* The snake collide: these methods are used to define when the snake hits with the canvas edges and 
+with itself. Two method are defined for this. "def collide_self_wall" to define the type of hit and
+  "def collide" to analise if the hit was done. 
+  
+* The next movement is the eat apple: to know if the snake eats an apple it is necessary to know if the snake hit
+the apple. Again, I have used the "def collide" method but in this case with the apple position. 
+  
+*Draw snake: to draw correctly the snake with their different body parts. 
 
+*Reset: used to draw the snake in the center of the canvas and reset the score values. 
 
+# DQN (Deep Q Network) class
 
+This is the core of the project, this network will can learn and play with easly. The Deep-Q learning
+is bases in DNN (deep neural network), the main difference is that included a reward in the result, 
+this value is extremely important to punishing or rewarding the network. If you have more interest in this theme
+this class also is names as agent. The next gif explains easily the visual way the reinforcement learning.
+
+![alt text](images/Reinforcement-Learning-Animation.gif)
+
+There are a lot of web pages where explain mathematicaly this method. The clue in all of this is the 
+Bellman equation which define the next state through the use of the reward. 
+
+![alt text](images/Bellman_equation.png)
+
+The params of the network are approximated is important to understand that in DL this values are not exact. For this reason,
+the best way to create the best model is testing with differents params. Some params will do that the training will be more precise but
+this always it will do that will be slower. 
+In the next link there is a URL to wikipedia for the  [Reinforcement-Learning](https://en.wikipedia.org/wiki/Q-learning)
