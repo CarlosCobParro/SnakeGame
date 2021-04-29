@@ -106,7 +106,7 @@ Respect the inputs each user can use what it prefers, but these inputs have to s
 It is possible, with two inputs if they are sufficiently descriptive, the system would work correctly. The inputs are one hot encoding too,
 this is because of the system with neuron works better with this type of inputs. 
 In the firs inputs the system is slow and clumsy but when it learns that it has not hit with the wall and go to the apple the
-network can play like a human.
+network can play like a human. holhaofdsaa
 
 ![alt text](images/sanke_v2.gif)
 
