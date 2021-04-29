@@ -110,7 +110,7 @@ network can play like a human.
 
 ![alt text](images/sanke_v2.gif)
 
-#Bibliography
+# Bibliography
 [https://link.springer.com/content/pdf/10.1007/BF00992698.pdf](https://link.springer.com/content/pdf/10.1007/BF00992698.pdf)
 
 [https://link.springer.com/chapter/10.1007/978-1-4842-3285-9_5](https://link.springer.com/chapter/10.1007/978-1-4842-3285-9_5)
