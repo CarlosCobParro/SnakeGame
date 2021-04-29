@@ -37,7 +37,7 @@ class canvas():
         self.params['learning_rate'] = 0.00025
         self.params['layer_sizes'] = [128, 128, 128]
 
-        self.state = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.state = [0, 0,  0, 0, 0, 0, 0, 0, 0, 0]
         self.apple = apple(self.size_range, self.size_range, self.size_step)
         self.snake = snake(self.height, self.width, self.size_step)
         self.agent_DQN = DQN(self.params, self.snake)
