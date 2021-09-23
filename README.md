@@ -1,40 +1,31 @@
 # SnakeGame (PyGame) with Keras and Q-learning method
 
-In this repository, I try to explain the way to design a snake game with classes and
-controlled for a DNN using Q-learning. The Q-learning is a branch of deep learning that consists 
-in create an AI that can learn for itself. 
+This repository presents ONE way to design a snake game with classes theory and played with a DNN using Q-learning. The objective is designed a intelligence model that it can play and learn being self-sufficient. 
 
 The required libraries are:
 * Pygame (2.0.1)
 * Numpy (Last version)
 * random
 * deque
-* TensorFlow > 2.1.0
+* TensorFlow (2.1.0)
 * Keras (This library need that tensorflow is installed)
 
 
-The firs step to create this project is to program the snake code. For this purpose
+Firstly, it is made the snake code and all its clasees to can play. For this purpose
 I have used the PyGame library but if you feel more comfortable with other as turtle library
 it does not matter, the important is the concept. Once the game has been created and running the 
 next step is to include the AI, in this case a DNN with three layers with 30 neurons per layer. 
 
-In the firs step, to create this game I have generated four classes: snake, canvas, DNN and apple. 
-They are the main objects in the game. It is possible to program this game without classes, 
-but it was more comfortable for me to use classes.
 
-It is logic to think that the canvas is
-like a real table, and the DNN is a boy with a radio control that he uses to control a robot snake. Also there is a 
-magic apple that can change its position when it is touched for the robot snake. 
-The robot snake is controlled for the child (DNN) but in the first iterations the boy does not know to use the radio 
-control, and the robot snake crashes with the table or with itself. With this example I try to explain the sense of work
-with classes, where each class has its function. The DNN (Deep neuron network) learning through the state of the robot 
-and with its fails and rewards. The robot snake is the snake class with its movements and finally the last class is the
-apple that is magic, and it can appear randomly in the table· I hope that this light and funny explanation  may be 
-helpful to you to have a general vision of the project. 
+
+To made the game I have used four classes: snake, canvas, DNN and apple. How I said before is possible to program this game and this project from different ways. Being possible to use more classes than me or using a monolithic method. 
+
+One way to easy the understood of the project is through the thought that the canvas is is like a real table, and the DNN is a boy with a radio control that he uses to control a robot snake. Also there is a magic apple that can change its position when it is touched for the robot snake. The robot snake is controlled for the child (DNN) but in the first iterations the boy does not know to use the radio control, and the robot snake crashes with the table or with itself. With this example I try to explain the sense of work
+with classes, where each class has its function. The DNN (Deep neuron network) learning through the state of the robot and with its fails and rewards. The robot snake is the snake class with its movements and finally the last class is the apple that is magic, and it can appear randomly in the table· I hope that this light and funny explanation  may be helpful to you to have a general vision of the project. 
 
 ## Canvas class:
 
-
+The canvas is the base of the game because all directions, distances and positions are processed in this class. For this reason, this class is larger than the other classes in the game. In addition, this class is where we define the DQN and train the network too. 
 
 
 ## Apple class:
